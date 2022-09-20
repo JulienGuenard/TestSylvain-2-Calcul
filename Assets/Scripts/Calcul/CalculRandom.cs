@@ -69,7 +69,7 @@ public class CalculRandom : CalculHeritage
         nb1 = Random.Range(1, 10);
         nb2 = Random.Range(1, 10);
 
-        switch (Random.Range(1, 4))
+        switch (Random.Range(1, 5))
         {
             case 1: sign = " + "; break;
             case 2: sign = " - "; break;
@@ -88,9 +88,8 @@ public class CalculRandom : CalculHeritage
             case " + ": result = nb1 + nb2; break;
             case " - ": result = nb1 - nb2; break;
             case " * ": result = nb1 * nb2; break;
-            case " / ": result = nb1 / nb2; break;
+            case " / ": result = (float)nb1 / (float)nb2; break;
         }
-
         answerCorrect = Random.Range(0, answerList.Count - 1);
     }
 
@@ -103,18 +102,18 @@ public class CalculRandom : CalculHeritage
             float calcul = 0;
             do
             {
-                calcul = result + Random.Range(-10, 10);
+                calcul = result + Random.Range(-11, 11);
             } while (calcul == result || allCalcul.Contains(calcul));
 
                 if (answerCorrect == i) calcul = result;
 
             allCalcul.Add(calcul);
-            answerList[i].text = calcul.ToString();
+            answerList[i].text = calcul.ToString("F1");
         }
 
         enonce.text = calculTxt;
 
         calculHistoric.Add(calculTxt);
-        resultHistoric.Add(result.ToString());
+        resultHistoric.Add(result.ToString("F1"));
     }
 }
