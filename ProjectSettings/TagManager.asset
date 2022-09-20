@@ -6,6 +6,7 @@ TagManager:
   tags:
   - enonce
   - answer
+  - historic
   layers:
   - Default
   - TransparentFX

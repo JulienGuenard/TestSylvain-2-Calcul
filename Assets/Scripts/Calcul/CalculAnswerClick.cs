@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,20 +10,20 @@ public class CalculAnswerClick : CalculHeritage
 
     public float newCalculDelay;
 
-    public void Answer(int id)
+    public void Answer(Image obj)
     {
-        Answer_Color(id);
-        Answer_DisableButtons(id);
+        Answer_Color(obj);
+        Answer_DisableButtons();
         StartCoroutine(NewCalculDelay());
     }
 
-    void Answer_Color(int id)
+    void Answer_Color(Image obj)
     {
-        if (calculRandom.answerCorrect == id) answerImageList[id].color = colorCorrect;
-        else answerImageList[id].color = colorWrong;
+        if (obj == answerImageList[calculRandom.answerCorrect]) obj.color = colorCorrect;
+        else obj.color = colorWrong;
     }
 
-    void Answer_DisableButtons(int id)
+    void Answer_DisableButtons()
     {
         foreach (Button btn in answerButtonList)
         {

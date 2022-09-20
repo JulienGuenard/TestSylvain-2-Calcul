@@ -12,6 +12,9 @@ public class CalculRandom : CalculHeritage
     float result;
     string calculTxt;
 
+    List<string> calculHistoric = new List<string>();
+    List<string> resultHistoric = new List<string>();
+
     override public void Awake()
     {
         base.Awake();
@@ -20,7 +23,7 @@ public class CalculRandom : CalculHeritage
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.N))
         {
             NewCalcul();
         }
@@ -28,10 +31,24 @@ public class CalculRandom : CalculHeritage
 
     public void NewCalcul()
     {
+        NewCalcul_WriteHistoric();
         NewCalcul_Reset();
         NewCalcul_RandomGeneration();
         NewCalcul_FindResult();
         NewCalcul_GenerateAnswers();
+    }
+
+    void NewCalcul_WriteHistoric()
+    {
+        if (calculHistoric.Count == 0) return;
+
+        string newTxt = "";
+
+        for(int i = 0; i < calculHistoric.Count; i++)
+        {
+            newTxt += i.ToString() + ": " + calculHistoric[i] + " = " + resultHistoric[i] + "<br>";
+                    }
+        historic.text = newTxt;
     }
 
     void NewCalcul_Reset()
@@ -84,17 +101,20 @@ public class CalculRandom : CalculHeritage
         for (int i = 0; i < answerList.Count; i++)
         {
             float calcul = 0;
-            while (calcul == result || allCalcul.Contains(calcul))
+            do
             {
                 calcul = result + Random.Range(-10, 10);
-            }
+            } while (calcul == result || allCalcul.Contains(calcul));
 
-            if (answerCorrect == i) calcul = result;
+                if (answerCorrect == i) calcul = result;
 
             allCalcul.Add(calcul);
             answerList[i].text = calcul.ToString();
         }
 
         enonce.text = calculTxt;
+
+        calculHistoric.Add(calculTxt);
+        resultHistoric.Add(result.ToString());
     }
 }
