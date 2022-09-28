@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,9 @@ public class CalculRandom : CalculHeritage
 
     List<string> calculHistoric = new List<string>();
     List<string> resultHistoric = new List<string>();
+
+    public List<AudioClip> numberSFXList;
+    public AudioClip signSFX;
 
     override public void Awake()
     {
@@ -34,6 +38,7 @@ public class CalculRandom : CalculHeritage
         NewCalcul_WriteHistoric();
         NewCalcul_Reset();
         NewCalcul_RandomGeneration();
+        StartCoroutine(NewCalcul_EnonceSFX());
         NewCalcul_FindResult();
         NewCalcul_GenerateAnswers();
     }
@@ -66,16 +71,34 @@ public class CalculRandom : CalculHeritage
 
     void NewCalcul_RandomGeneration()
     {
-        nb1 = Random.Range(1, 10);
-        nb2 = Random.Range(1, 10);
+        int new_nb1 = 0;
+        int new_nb2 = 0;
+        do
+        {
+            new_nb1 = Random.Range(1, 11);
+            new_nb2 = Random.Range(1, 11);
+        }
+        while (new_nb1 == nb1 && new_nb2 == nb2);
 
-        switch (Random.Range(1, 5))
+        nb1 = new_nb1;
+        nb2 = new_nb2;
+
+        switch (Random.Range(3, 4))
         {
             case 1: sign = " + "; break;
             case 2: sign = " - "; break;
             case 3: sign = " * "; break;
             case 4: sign = " / "; break;
         }
+    }
+
+    IEnumerator NewCalcul_EnonceSFX()
+    {
+        audioS.PlayOneShot(numberSFXList[nb1]);
+        yield return new WaitForSeconds(numberSFXList[nb1].length - 0.1f);
+        audioS.PlayOneShot(signSFX, 1.3f);
+        yield return new WaitForSeconds(signSFX.length);
+        audioS.PlayOneShot(numberSFXList[nb2]);
     }
 
     void NewCalcul_FindResult()
@@ -90,7 +113,7 @@ public class CalculRandom : CalculHeritage
             case " * ": result = nb1 * nb2; break;
             case " / ": result = (float)nb1 / (float)nb2; break;
         }
-        answerCorrect = Random.Range(0, answerList.Count - 1);
+        answerCorrect = Random.Range(0, answerList.Count);
     }
 
     void NewCalcul_GenerateAnswers()
@@ -102,18 +125,18 @@ public class CalculRandom : CalculHeritage
             float calcul = 0;
             do
             {
-                calcul = result + Random.Range(-11, 11);
+                calcul = result + Random.Range(-10, 10);
             } while (calcul == result || allCalcul.Contains(calcul));
 
                 if (answerCorrect == i) calcul = result;
 
             allCalcul.Add(calcul);
-            answerList[i].text = calcul.ToString("F1");
+            answerList[i].text = calcul.ToString();
         }
 
         enonce.text = calculTxt;
 
         calculHistoric.Add(calculTxt);
-        resultHistoric.Add(result.ToString("F1"));
+        resultHistoric.Add(result.ToString());
     }
 }
